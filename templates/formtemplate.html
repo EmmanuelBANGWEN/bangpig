@@ -1,0 +1,14 @@
+{% extends 'card.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block cardcontent %}
+
+<form autocomplete="off" method="POST">
+  {% csrf_token %}
+  {{form|crispy}}
+      <button class="btn btn-success btn-lg float-right" type="submit">Next</button>
+</form>
+
+
+
+{% endblock cardcontent %}

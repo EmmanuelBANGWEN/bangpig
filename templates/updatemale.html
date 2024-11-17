@@ -1,0 +1,196 @@
+{% extends 'card.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block cardcontent %}
+
+
+
+<form id="gipform">
+<div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="button" formaction="" id="gip">Identification Générale et Parenté</button>
+</div>
+</form>
+<form id="epform">
+<div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="button" id="ep">Paramètre Efficacité</button>
+</div>
+</form>
+<form id="vetform">
+<div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="button" id="vet">Examens Vétérinaires</button>
+</div>
+</form>
+<form id="vacform">
+<div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="button" id="vac">Vaccinations</button>
+</div>
+</form>
+<form id="deathform">
+<div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="button" id="death">Death Information</button>
+</div>
+</form>
+<form id="qbbform">
+<div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="button" id="qbb">Qualification as a Breeding Boar</button>
+</div>
+</form>
+<form id="srlcform">
+<div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="button" id="srlc">Enregistrement des Services et Caractères des Portées</button>
+</div>
+</form>
+<form id="nfform">
+<div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="button" id="nf">Nutrition et Alimentation</button>
+</div>
+</form>
+<form id="dcform">
+<div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="button" id="dc">Disposal/Culling</button>
+</div>
+</form>
+<form id="ecoform">
+<div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="button" id="eco">Economics</button>
+</div>
+</form>
+<form>
+            <button class="btn btn-success btn-lg" type="submit" formaction="/dataentry/">Return</button>
+    </form>
+
+<script>
+    var gip=document.getElementById("gip");
+    gip.addEventListener("click", gipfunc);
+
+    function gipfunc(){
+        console.log("click");
+        var gipform=document.getElementById("gipform");
+        var s1='general/';
+        var s={{animal_id}};
+        var x=s1.concat(s);
+        gipform.action=x;
+        gipform.submit();
+    }
+
+    var ep=document.getElementById("ep");
+    ep.addEventListener("click", epfunc);
+
+    function epfunc(){
+        console.log("click");
+        var epform=document.getElementById("epform");
+        var s1='efficiency/';
+        var s={{animal_id}};
+        var x=s1.concat(s);
+        epform.action=x;
+        epform.submit();
+    }
+
+    var qbb=document.getElementById("qbb");
+    qbb.addEventListener("click", qbbfunc);
+
+    function qbbfunc(){
+        console.log("click");
+        var qbbform=document.getElementById("qbbform");
+        var s1='qualification/';
+        var s={{animal_id}};
+        var x=s1.concat(s);
+        qbbform.action=x;
+        qbbform.submit();
+    }
+
+    var srlc=document.getElementById("srlc");
+    srlc.addEventListener("click", srlcfunc);
+
+    function srlcfunc(){
+        console.log("click");
+        var srlcform=document.getElementById("srlcform");
+        var s1='service/';
+        var s={{animal_id}};
+        var x=s1.concat(s);
+        srlcform.action=x;
+        srlcform.submit();
+    }
+
+    var nf=document.getElementById("nf");
+    nf.addEventListener("click", nffunc);
+
+    function nffunc(){
+        console.log("click");
+        var nfform=document.getElementById("nfform");
+        var s1='nutrition/';
+        var s={{animal_id}};
+        var x=s1.concat(s);
+        nfform.action=x;
+        nfform.submit();
+    }
+
+    var dc=document.getElementById("dc");
+    dc.addEventListener("click", dcfunc);
+
+    function dcfunc(){
+        console.log("click");
+        var dcform=document.getElementById("dcform");
+        var s1='disposal/';
+        var s={{animal_id}};
+        var x=s1.concat(s);
+        dcform.action=x;
+        dcform.submit();
+    }
+
+    var eco=document.getElementById("eco");
+    eco.addEventListener("click", ecofunc);
+
+    function ecofunc(){
+        console.log("click");
+        var ecoform=document.getElementById("ecoform");
+        var s1='economics/';
+        var s={{animal_id}};
+        var x=s1.concat(s);
+        ecoform.action=x;
+        ecoform.submit();
+    }
+
+var death=document.getElementById("death");
+    death.addEventListener("click", deathfunc);
+
+    function deathfunc(){
+        console.log("click");
+        var deathform=document.getElementById("deathform");
+        var s1='death/';
+        var s={{animal_id}};
+        var x=s1.concat(s);
+        deathform.action=x;
+        deathform.submit();
+    }
+
+var vet=document.getElementById("vet");
+    vet.addEventListener("click", vetfunc);
+
+    function vetfunc(){
+        console.log("click");
+        var vetform=document.getElementById("vetform");
+        var s1='vetexam/';
+        var s={{animal_id}};
+        var x=s1.concat(s);
+        vetform.action=x;
+        vetform.submit();
+    }
+    
+
+var vac=document.getElementById("vac");
+    vac.addEventListener("click", vacfunc);
+
+    function vacfunc(){
+        console.log("click");
+        var vacform=document.getElementById("vacform");
+        var s1='vaccination/';
+        var s={{animal_id}};
+        var x=s1.concat(s);
+        vacform.action=x;
+        vacform.submit();
+    }
+
+</script>
+
+{% endblock cardcontent %}
