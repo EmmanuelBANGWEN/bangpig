@@ -243,6 +243,7 @@ def create_efficiency(request, animal_id):
                 obj.user = request.user  # Associer l'utilisateur connecté
                 obj.save()
                 return redirect('create_qualification',animal_id=animal_id)
+                
         context={
             'form':form,
             'tablename':'Paramètre Efficacité'
@@ -516,16 +517,21 @@ def successupdate(request):
 @login_required(login_url='loginuser')
 def update(request):
     animal_id = request.POST.get('animal_id')
-    if general_identification_and_parentage.objects.filter(animal_id=animal_id).exists():
-        animal=general_identification_and_parentage.objects.get(animal_id=animal_id)
-        context={'tablename':'Mise à Jour des Enregistrements', 'animal_id':animal_id}
-        if animal.gender=='Female':
-            return render(request,"updatefemale.html",context)
-        elif animal.gender=='Male':
-            return render(request,"updatemale.html", context)
+    if animal_id and general_identification_and_parentage.objects.filter(animal_id=animal_id).exists():
+        animal = general_identification_and_parentage.objects.get(animal_id=animal_id)
+        context = {
+            'tablename': 'Mise à Jour des Enregistrements',
+            'animal_id': animal_id,
+            'gender': animal.gender
+        }
+        if animal.gender == 'Female':
+            return render(request, "updatefemale.html", context)
+        elif animal.gender == 'Male':
+            return render(request, "updatemale.html", context)
     else:
         messages.error(request, 'The animal does not exist')
-        return redirect(dataentry)
+        return redirect('dataentry')
+
 
 
 @login_required(login_url='loginuser')
@@ -827,28 +833,29 @@ def history(request, animal_id):
         messages.error(request, 'The animal does not exist')
         return redirect(report)
     animal=general_identification_and_parentage.objects.get(animal_id=animal_id)
+    
     animal_gender=animal.gender
     animal_health_parameter_vaccination=health_parameter_vaccination.objects.filter(gip=animal)
     animal_health_parameter_vetexam=health_parameter_vetexam.objects.filter(gip=animal)
-    if disposal_culling.objects.filter(gip=animal).exists()==True:
+    if disposal_culling.objects.filter(gip=animal).exists():
         animal_disposal_culling=disposal_culling.objects.get(gip=animal)
     else:
         animal_disposal_culling=None
     animal_nutrition_and_feeding=nutrition_and_feeding.objects.filter(gip=animal)
-    if economics.objects.filter(gip=animal)==True:
+    if economics.objects.filter(gip=animal).exists():
         animal_economics=economics.objects.get(gip=animal)
     else:
         animal_economics=None
-    if death.objects.filter(gip=animal).exists()==True:
+    if death.objects.filter(gip=animal).exists():
         animal_death=death.objects.get(gip=animal)
     else:
         animal_death=None
     if animal_gender=='Male':
-        if efficiency_parameter_male.objects.filter(gip=animal)==True:
+        if efficiency_parameter_male.objects.filter(gip=animal).exists():
             animal_efficiency_parameter_male=efficiency_parameter_male.objects.get(gip=animal)
         else:
             animal_efficiency_parameter_male=None
-        if qualification_boar.objects.filter(gip=animal)==True:
+        if qualification_boar.objects.filter(gip=animal).exists():
             animal_qualification_boar=qualification_boar.objects.get(gip=animal)
         else:
             animal_qualification_boar=None
@@ -856,30 +863,31 @@ def history(request, animal_id):
         context={
         'tablename':'History Sheet',
         'death':animal_death,
+        'gen': animal,
         'vaccinations':animal_health_parameter_vaccination,
         'vetexams':animal_health_parameter_vetexam,
         'disposal':animal_disposal_culling,
         'nutritions':animal_nutrition_and_feeding,
         'economic':animal_economics,
         'efficiency':animal_efficiency_parameter_male,
-        'qualification':animal_qualification_boar,
+        'qualification': animal_qualification_boar,
         'services':animal_service_record_male
         }
         return render(request, "historydatamale.html", context)
     
     elif animal_gender=='Female':
-        if efficiency_parameter_female.objects.filter(gip=animal)==True:
+        if efficiency_parameter_female.objects.filter(gip=animal).exists():
             animal_efficiency_parameter_female=efficiency_parameter_female.objects.get(gip=animal)
         else:
             animal_efficiency_parameter_female=None
         
         animal_service_record_female=service_record_female.objects.filter(gip=animal)
         
-        born_sum = 0
-        weaned_sum = 0
-        total_born_weight = 0
-        total_weaned_weight = 0
-        preweaning_mortality = 0
+        born_sum = 0  #somme totale des animaux nés (mâles et femelles) pour toutes les portées de l'animal.
+        weaned_sum = 0  # somme totale des animaux sevrés pour toutes les portées.
+        total_born_weight = 0       #  poids total des portées à la naissance.
+        total_weaned_weight = 0          #  poids total des portées au moment du sevrage.
+        preweaning_mortality = 0        #  Pourcentage de mortalité pré-sevrage
 
         for i in animal_service_record_female:
             born_sum+=i.born_total
@@ -895,7 +903,7 @@ def history(request, animal_id):
         'tablename':'History Sheet',
         'death':death,
         'animal_id':animal,
-
+        'gen': animal,
         'vaccinations':animal_health_parameter_vaccination,
         'vetexams':animal_health_parameter_vetexam,
         'disposal':animal_disposal_culling,
@@ -910,6 +918,7 @@ def history(request, animal_id):
         'preweaning_mortality':preweaning_mortality,
         #'litter':animal_lifetime_litter_character
         }
+
         return render(request, "historydatafemale.html", context)
 
 @login_required(login_url='loginuser')

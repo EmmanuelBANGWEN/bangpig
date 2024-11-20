@@ -3,8 +3,12 @@
 {% block cardcontent %}
 
 {% comment %} general {% endcomment %}
+
+
+
 <div class="row">
 
+  
 Numéro d'identification  : {{gen.animal_id}}
 </div>
 <div class="row">
@@ -40,7 +44,7 @@ Anomalies :  {{gen.abnormalities}}
 <div class="row">
 
 {% comment %} efficiency {% endcomment %}
-Date de sevrage : {{ efficiency.dow}}
+Date de sevrage : {{ efficiency.dow|default:"Non spécifié" }}
 </div>
 <div class="row">
 Taille de la portée au sevrage : {{ efficiency.litter_size_weaning}} 
@@ -48,6 +52,7 @@ Taille de la portée au sevrage : {{ efficiency.litter_size_weaning}}
 <div class="row">
 Âge au sevrage (en jours) : {{ efficiency.weaning_age }}
 </div>
+
 <div class="row">
 Poids au sevrage : {{ efficiency.weaning_weight }}
 </div>
@@ -131,32 +136,21 @@ Conformation à huit mois : {{ efficiency.conform_at_eight }}
       </table>
   </div>
 
-<div class="row">
-Number Of Litter Born Lifetime  : {{born_sum }}
-</div>
-
-<div class="row">
-Lifetime Litter Weight At Birth : {{ total_born_weight }}
-</div>
-
-<div class="row">
-Lifetime Litter Number At Weaning : {{ weaned_sum }}
-</div>
-
-<div class="row">
-Lifetime Litter Weight At Weaning : {{ total_weaned_weight }}
-</div>
-<div class="row">
-Preweaning Mortality (in percentage) : {{ preweaning_mortality }}
-</div>
-
-'born_sum':born_sum,
-        'weaned_sum':weaned_sum,
-        'total_born_weight':total_born_weight,
-        'total_weaned_weight':total_weaned_weight,
-        'preweaning_mortality':preweaning_mortality,
-
-
+  <div class="row mt-4">
+    <h3>Statistiques Globales</h3>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <p><strong>Nombre total d'animaux nés :</strong> {{ born_sum }}</p>
+      <p><strong>Poids total des portées à la naissance :</strong> {{ total_born_weight }} kg</p>
+    </div>
+    <div class="col-md-6">
+      <p><strong>Nombre total d'animaux sevrés :</strong> {{ weaned_sum }}</p>
+      <p><strong>Poids total des portées au sevrage :</strong> {{ total_weaned_weight }} kg</p>
+      <p><strong>Mortalité pré-sevrage (en %):</strong> {{ preweaning_mortality|floatformat:2 }}</p>
+    </div>
+  </div>
+  
 
 {% comment %} vaccination {% endcomment %}
 

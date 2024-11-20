@@ -39,7 +39,7 @@ Anomalies :  {{gen.abnormalities}}
 <div class="row">
 
 {% comment %} efficiency {% endcomment %}
-Date de sevrage : {{ efficiency.dow}}
+Date de sevrage : {{ efficiency.dow|default_if_none:"N/A"}}
 </div>
 <div class="row">
 Taille de la portée au sevrage : {{litter_size_weaning}} 
@@ -75,24 +75,31 @@ Conformation à huit mois : {{ efficiency.conform_at_eight }}
 
 
 {% comment %} qualification {% endcomment %}
-Physical Fitness : {{ qualification.physical_fitness }}
-</div>
-<div class="row">
-Date Of Onset Of Training : {{ qualification.date_of_training }}
-</div>
-<div class="row">
-Period Of Training : {{ qualification.period_of_training }}
-</div>
-<div class="row">
-Training Score : {{ qualification.training_score }}
-</div>
-<div class="row">
-Evaluation Based On Seminal Characteristics : {{ qualification.seminal_characteristics }}
-</div>
-<div class="row">
-Suitability For Insemination : {{ qualification.suitability }}
-</div>
-  
+{% if qualification %}
+    <div class="row">
+        Physical Fitness : {{ qualification.physical_fitness }}
+    </div>
+    <div class="row">
+        Date Of Onset Of Training : {{ qualification.date_of_training }}
+    </div>
+    <div class="row">
+        Period Of Training : {{ qualification.period_of_training }}
+    </div>
+    <div class="row">
+        Training Score : {{ qualification.training_score }}
+    </div>
+    <div class="row">
+        Evaluation Based On Seminal Characteristics : {{ qualification.seminal_characteristics }}
+    </div>
+    <div class="row">
+        Suitability For Insemination : {{ qualification.suitability }}
+    </div>
+{% else %}
+    <div class="row">
+        No qualification data available.
+    </div>
+{% endif %}
+
 
 {% comment %} service {% endcomment %}
 

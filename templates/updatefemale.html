@@ -10,57 +10,103 @@
 </div>
 
 
-<form id="gipform">
-<div class="row justify-content-center py-2">
-        <button class="btn btn-success btn-lg" type="button" formaction="" id="gip">Identification Générale et Parenté</button>
-</div>
+
+
+
+
+
+
+<form id="gipform" method="post" action="{% url 'update_general' animal_id=animal_id %}">
+    {% csrf_token %}
+    <div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="submit">Identification Générale et Parenté</button>
+    </div>
 </form>
-<form id="epform">
-<div class="row justify-content-center py-2">
-        <button class="btn btn-success btn-lg" type="button" id="ep">Paramètre Efficacité</button>
-</div>
+
+<form id="epform" method="post" action="{% url 'update_efficiency' animal_id=animal_id %}">
+    {% csrf_token %}
+    <div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="submit">Paramètre Efficacité</button>
+    </div>
 </form>
+
+<form id="vetform" method="post" action="{% url 'update_vetexam' animal_id=animal_id %}">
+    {% csrf_token %}
+    <div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="submit">Examens Vétérinaires</button>
+    </div>
 </form>
-<form id="vetform">
-<div class="row justify-content-center py-2">
-        <button class="btn btn-success btn-lg" type="button" id="vet">Examens Vétérinaires</button>
-</div>
+
+<form id="vacform" method="post" action="{% url 'update_vaccination' animal_id=animal_id %}">
+    {% csrf_token %}
+    <div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="submit">Vaccinations</button>
+    </div>
 </form>
-<form id="vacform">
-<div class="row justify-content-center py-2">
-        <button class="btn btn-success btn-lg" type="button" id="vac">Vaccinations</button>
-</div>
+
+<form id="deathform" method="post" action="{% url 'update_death' animal_id=animal_id %}">
+    {% csrf_token %}
+    <div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="submit">Death Information</button>
+    </div>
 </form>
-<form id="deathform">
-<div class="row justify-content-center py-2">
-        <button class="btn btn-success btn-lg" type="button" id="death">Death Information</button>
-</div>
+
+<form id="srlcform" method="post" action="{% url 'update_service' animal_id=animal_id %}">
+    {% csrf_token %}
+    <div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="submit">Enregistrement des Services et Caractères des Portées</button>
+    </div>
 </form>
-<form id="srlcform">
-<div class="row justify-content-center py-2">
-        <button class="btn btn-success btn-lg" type="button" id="srlc">Enregistrement des Services et Caractères des Portées</button>
-</div>
+
+<form id="nfform" method="post" action="{% url 'update_nutrition' animal_id=animal_id %}">
+    {% csrf_token %}
+    <div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="submit">Nutrition et Alimentation</button>
+    </div>
 </form>
-<form id="nfform">
-<div class="row justify-content-center py-2">
-        <button class="btn btn-success btn-lg" type="button" id="nf">Nutrition et Alimentation</button>
-</div>
+
+<form id="dcform" method="post" action="{% url 'update_disposal' animal_id=animal_id %}">
+    {% csrf_token %}
+    <div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="submit">Disposition/Abattage</button>
+    </div>
 </form>
-<form id="dcform">
-<div class="row justify-content-center py-2">
-        <button class="btn btn-success btn-lg" type="button" id="dc">Disposition/Abattage</button>
-</div>
+
+<form id="ecoform" method="post" action="{% url 'update_economics' animal_id=animal_id %}">
+    {% csrf_token %}
+    <div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="submit">Economics</button>
+    </div>
 </form>
-<form id="ecoform">
-<div class="row justify-content-center py-2">
-        <button class="btn btn-success btn-lg" type="button" id="eco">Economics</button>
-</div>
+
+<form method="get" action="/dataentry/">
+    <div class="row justify-content-center py-2">
+        <button class="btn btn-success btn-lg" type="submit">Retour</button>
+    </div>
 </form>
-<form>
-            <button class="btn btn-success btn-lg" type="submit" formaction="/dataentry/">Retour</button>
-    </form>
+
+
 
 <script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     var gip=document.getElementById("gip");
     gip.addEventListener("click", gipfunc);
 
@@ -164,6 +210,10 @@ var vet=document.getElementById("vet");
         var x=s1.concat(s);
         vetform.action=x;
         vetform.submit();
+
+
+
+
     }
     
 
@@ -179,6 +229,7 @@ var vac=document.getElementById("vac");
         vacform.action=x;
         vacform.submit();
     }
+
 
     
 </script>

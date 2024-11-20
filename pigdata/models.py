@@ -18,7 +18,6 @@ class general_identification_and_parentage(models.Model):
     def __str__(self):
         return f"{self.animal_id} ({self.user.username})"
 
-
 class health_parameter_vaccination(models.Model):
     gip = models.ForeignKey(general_identification_and_parentage, on_delete=models.CASCADE)
     disease=models.CharField(max_length=50, blank=True)
@@ -27,7 +26,6 @@ class health_parameter_vaccination(models.Model):
     booster_dose=models.DateField(blank=True,null=True)
     repeat=models.DateField(blank=True,null=True)
     
-
 class health_parameter_vetexam(models.Model):
     gip = models.ForeignKey(general_identification_and_parentage, on_delete=models.CASCADE)
     reason=models.TextField(blank=True)
@@ -35,8 +33,6 @@ class health_parameter_vetexam(models.Model):
     medication=models.TextField(blank=True)
     remarks=models.TextField(blank=True)
     
-    
-
 class disposal_culling(models.Model):
     gip = models.OneToOneField(general_identification_and_parentage, on_delete=models.CASCADE)
     reason=models.TextField(blank=True)
@@ -44,8 +40,6 @@ class disposal_culling(models.Model):
     weight_sale=models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
     revenue=models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     
-    
-
 class nutrition_and_feeding(models.Model):
     gip = models.ForeignKey(general_identification_and_parentage, on_delete=models.CASCADE)
     treatment=models.TextField(blank=True)
@@ -54,7 +48,6 @@ class nutrition_and_feeding(models.Model):
     end_date=models.DateField(blank=True,null=True)
     remarks=models.TextField(blank=True)
     
-
 class economics(models.Model):
     gip = models.OneToOneField(general_identification_and_parentage, on_delete=models.CASCADE)
     book_value=models.DecimalField(max_digits=10, decimal_places=6, blank=True, null=True)
