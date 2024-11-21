@@ -29,7 +29,7 @@ class loginuserform(forms.Form):
 class general_form(forms.ModelForm):
     class Meta:
         model=general_identification_and_parentage
-        fields='__all__'
+        exclude = ['user']        
         labels = {
             'animal_id':'Identification Number',
             'dob':'Date Of Birth',
@@ -44,7 +44,9 @@ class general_form(forms.ModelForm):
             'abnormalities': 'Genetic Abnormalities/Disorder',
         }
         widgets = {
-            'dob': DatePickerInput(format='%Y-%m-%d'),
+            # 'dob': DatePickerInput(format='%Y-%m-%d'),
+            'dob': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
             
         }
         
@@ -52,7 +54,7 @@ class general_form(forms.ModelForm):
 class disposal_form(forms.ModelForm):
     class Meta:
         model=disposal_culling
-        fields='__all__'
+        exclude = ['user']        
         labels={
             'gip': 'Identification Number',
             'reason': 'Reason For Sale/Transfer',
@@ -62,7 +64,9 @@ class disposal_form(forms.ModelForm):
             
         }
         widgets = {
-            'sale_date': DatePickerInput(format='%Y-%m-%d'),
+            # 'sale_date': DatePickerInput(format='%Y-%m-%d'),
+            'sale_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
         }
 
 class death_form(forms.ModelForm):
@@ -76,7 +80,9 @@ class death_form(forms.ModelForm):
             'postmortem_findings':'Post Mortem Findings'
         }
         widgets = {
-            'date_death': DatePickerInput(format='%Y-%m-%d'),
+            # 'date_death': DatePickerInput(format='%Y-%m-%d'),
+            'date_death': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
         }
 
 
@@ -92,8 +98,10 @@ class nutrition_form(forms.ModelForm):
             'remarks': 'Remarks',
         }
         widgets = {
-            'start_date': DatePickerInput(format='%Y-%m-%d'),
-            'end_date': DatePickerInput(format='%Y-%m-%d'),
+
+            'start_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'end_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
         }
 
 class economics_form(forms.ModelForm):
@@ -109,7 +117,7 @@ class economics_form(forms.ModelForm):
 class vaccination_form(forms.ModelForm):
     class Meta:
         model=health_parameter_vaccination
-        fields='__all__'
+        exclude = ['user']        
         labels={
             'gip': 'Identification Number',
             'disease': 'Against Disease',
@@ -118,10 +126,25 @@ class vaccination_form(forms.ModelForm):
             'booster': 'Booster Dose',
         }
         widgets = {
-            'first_dose': DatePickerInput(format='%Y-%m-%d'),
-            'booster': DatePickerInput(format='%Y-%m-%d'),
-            'repeat': DatePickerInput(format='%Y-%m-%d'),
+
+            'first_dose': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'booster': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'repeat': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
         }
+        
+    def __init__(self, *args, user=None, **kwargs):
+        # Récupérer l'animal spécifique depuis l'initialisation (kwargs['initial'])
+        initial = kwargs.get('initial', {})
+        specific_animal = initial.get('gip', None)
+
+        super().__init__(*args, **kwargs)
+        if specific_animal:
+            # Restreindre le champ `gip` à l'animal spécifique
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(pk=specific_animal.pk)
+        elif user:
+            # Si aucun animal spécifique, filtrer les animaux appartenant à l'utilisateur connecté
+            self.fields['gip'].queryset = general_identification_and_parentage.objects.filter(user=user)
 
 class vetexam_form(forms.ModelForm):
     class Meta:
@@ -135,7 +158,8 @@ class vetexam_form(forms.ModelForm):
             'remarks': 'Remarks',
         }
         widgets = {
-            'date_of_treatment': DatePickerInput(format='%Y-%m-%d'),
+            'date_of_treatment': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
         }
 
 class efficiency_form_female(forms.ModelForm):
@@ -156,9 +180,11 @@ class efficiency_form_female(forms.ModelForm):
             'conform_at_eight': 'Conformation At Eight Months',
         }
         widgets = {
-            'dow': DatePickerInput(format='%Y-%m-%d'),
-            'dos': DatePickerInput(format='%Y-%m-%d'),
-            'dosm': DatePickerInput(format='%Y-%m-%d'),
+        
+            'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dosm': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
         }
 
 
@@ -181,10 +207,16 @@ class efficiency_form_male(forms.ModelForm):
             'conform_at_eight': 'Conformation At Eight Months',
         }
         widgets = {
-            'dow': DatePickerInput(format='%Y-%m-%d'),
-            'dos': DatePickerInput(format='%Y-%m-%d'),
-            'doc': DatePickerInput(format='%Y-%m-%d'),
-            'dosm': DatePickerInput(format='%Y-%m-%d'),
+            # 'dow': DatePickerInput(format='%Y-%m-%d'),
+            # 'dos': DatePickerInput(format='%Y-%m-%d'),
+            # 'doc': DatePickerInput(format='%Y-%m-%d'),
+            # 'dosm': DatePickerInput(format='%Y-%m-%d'),
+
+            'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'doc': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dosm': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
         }
 
 class qualification_form(forms.ModelForm):
@@ -201,7 +233,8 @@ class qualification_form(forms.ModelForm):
             'suitability': 'Suitability For Insemination',
         }
         widgets = {
-            'date_of_training': DatePickerInput(format='%Y-%m-%d'),
+            'date_of_training': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
             
         }
 
@@ -226,8 +259,10 @@ class service_form_male(forms.ModelForm):
             'still_birth_abnormality': 'Still Birth Or Abnormality',
         }
         widgets = {
-            'dos': DatePickerInput(format='%Y-%m-%d'),
-            'dof': DatePickerInput(format='%Y-%m-%d'),
+
+            'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dof': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
         }
 
 class service_form_female(forms.ModelForm):
@@ -255,10 +290,16 @@ class service_form_female(forms.ModelForm):
             'date_of_abortion':'Date Of Abortion',
         }
         widgets = {
-            'dos': DatePickerInput(format='%Y-%m-%d'),
-            'dof': DatePickerInput(format='%Y-%m-%d'),
-            'dow': DatePickerInput(format='%Y-%m-%d'),
-            'date_of_abortion': DatePickerInput(format='%Y-%m-%d'),
+            # 'dos': DatePickerInput(format='%Y-%m-%d'),
+            # 'dof': DatePickerInput(format='%Y-%m-%d'),
+            # 'dow': DatePickerInput(format='%Y-%m-%d'),
+            # 'date_of_abortion': DatePickerInput(format='%Y-%m-%d'),
+
+            'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dof': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'date_of_abortion': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
         }
 
 
@@ -293,7 +334,8 @@ class general_update_form(forms.ModelForm):
             'abnormalities': 'Genetic Abnormalities/Disorder',
         }
         widgets = {
-            'dob': DatePickerInput(format='%Y-%m-%d'),
+            'dob': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+           
             #'animal_id':forms.TextInput(attrs={'disabled':True}),
             #'dob':forms.TextInput(attrs={'disabled':True}),
             #'gender':forms.TextInput(attrs={'disabled':True}),
@@ -319,7 +361,8 @@ class disposal_update_form(forms.ModelForm):
             'revenue':'Revenue Generated'
         }
         widgets = {
-            'sale_date': DatePickerInput(format='%Y-%m-%d'),
+            'sale_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+           
             #'gip': forms.TextInput(attrs={'disabled':True}),
             #'reason': forms.TextInput(attrs={'disabled':True}),
             #'sale_date': forms.TextInput(attrs={'disabled':True}),
@@ -339,7 +382,8 @@ class death_update_form(forms.ModelForm):
             'postmortem_findings':'Post Mortem Findings'
         }
         widgets = {
-            'date_death': DatePickerInput(format='%Y-%m-%d'),
+            'date_death': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
             #'gip': forms.TextInput(attrs={'disabled':True}),
             #'cause_death': forms.TextInput(attrs={'disabled':True}),
             #'date_death': forms.TextInput(attrs={'disabled':True}),
@@ -360,8 +404,11 @@ class nutrition_update_form(forms.ModelForm):
             'remarks': 'Remarks',
         }
         widgets = {
-            'start_date': DatePickerInput(format='%Y-%m-%d'),
-            'end_date': DatePickerInput(format='%Y-%m-%d'),
+            # 'start_date': DatePickerInput(format='%Y-%m-%d'),
+            # 'end_date': DatePickerInput(format='%Y-%m-%d'),
+            'start_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'end_date': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+           
             #'gip': forms.TextInput(attrs={'disabled':True}),
             #'treatment': forms.TextInput(attrs={'disabled':True}),
             #'start_date': forms.TextInput(attrs={'disabled':True}),
@@ -396,16 +443,21 @@ class vaccination_update_form(forms.ModelForm):
             'booster': 'Booster Dose',
         }
         widgets = {
-            'first_dose': DatePickerInput(format='%Y-%m-%d'),
-            'booster': DatePickerInput(format='%Y-%m-%d'),
-            'repeat': DatePickerInput(format='%Y-%m-%d'),
+            # 'first_dose': DatePickerInput(format='%Y-%m-%d'),
+            # 'booster': DatePickerInput(format='%Y-%m-%d'),
+            # 'repeat': DatePickerInput(format='%Y-%m-%d'),
+
+            'first_dose': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'booster': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'repeat': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
             #'gip': forms.TextInput(attrs={'disabled':True}),
             #'disease': forms.TextInput(attrs={'disabled':True}),
             #'make': forms.TextInput(attrs={'disabled':True}),
             #'first_dose': forms.TextInput(attrs={'disabled':True}),
             #'booster': forms.TextInput(attrs={'disabled':True}),
         }
-
+    
 class vetexam_update_form(forms.ModelForm):
     class Meta:
         model=health_parameter_vetexam
@@ -418,7 +470,8 @@ class vetexam_update_form(forms.ModelForm):
             'remarks': 'Remarks',
         }
         widgets = {
-            'date_of_treatment': DatePickerInput(format='%Y-%m-%d'),
+            'date_of_treatment': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
             #'gip': forms.TextInput(attrs={'disabled':True}),
             #'reason': forms.TextInput(attrs={'disabled':True}),
             #'date_of_treatment': forms.TextInput(attrs={'disabled':True}),
@@ -444,9 +497,14 @@ class efficiency_update_form_female(forms.ModelForm):
             'conform_at_eight': 'Conformation At Eight Months',
         }
         widgets = {
-            'dow': DatePickerInput(format='%Y-%m-%d'),
-            'dos': DatePickerInput(format='%Y-%m-%d'),
-            'dosm': DatePickerInput(format='%Y-%m-%d'),
+            # 'dow': DatePickerInput(format='%Y-%m-%d'),
+            # 'dos': DatePickerInput(format='%Y-%m-%d'),
+            # 'dosm': DatePickerInput(format='%Y-%m-%d'),
+
+            'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dosm': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
             #'gip': forms.TextInput(attrs={'disabled':True}),
             #'dow': forms.TextInput(attrs={'disabled':True}),
             #'litter_size_weaning':forms.TextInput(attrs={'disabled':True}),
@@ -485,6 +543,12 @@ class efficiency_update_form_male(forms.ModelForm):
             'dos': DatePickerInput(format='%Y-%m-%d'),
             'doc': DatePickerInput(format='%Y-%m-%d'),
             'dosm': DatePickerInput(format='%Y-%m-%d'),
+
+            'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'doc': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dosm': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
             # 'gip': forms.TextInput(attrs={'disabled':True}),
             # 'dow': forms.TextInput(attrs={'disabled':True}),
             # 'litter_size_weaning':forms.TextInput(attrs={'disabled':True}),
@@ -513,7 +577,8 @@ class qualification_update_form(forms.ModelForm):
             'suitability': 'Suitability For Insemination',
         }
         widgets = {
-            'date_of_training': DatePickerInput(format='%Y-%m-%d'),
+            'date_of_training': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
             # 'gip': forms.TextInput(attrs={'disabled':True}),
             # 'physical_fitness': forms.TextInput(attrs={'disabled':True}),
             # 'date_of_training': forms.TextInput(attrs={'disabled':True}),
@@ -544,8 +609,10 @@ class service_update_form_male(forms.ModelForm):
             'still_birth_abnormality': 'Still Birth Or Abnormality',
         }
         widgets = {
-            'dos': DatePickerInput(format='%Y-%m-%d'),
-            'dof': DatePickerInput(format='%Y-%m-%d'),
+           
+            'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dof': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
             # 'gip': forms.TextInput(attrs={'disabled':True}),
             # 'sow_no': forms.TextInput(attrs={'disabled':True}),
             # 'dos': forms.TextInput(attrs={'disabled':True}),
@@ -587,10 +654,13 @@ class service_update_form_female(forms.ModelForm):
             'date_of_abortion':'Date Of Abortion',
         }
         widgets = {
-            'dos': DatePickerInput(format='%Y-%m-%d'),
-            'dof': DatePickerInput(format='%Y-%m-%d'),
-            'dow': DatePickerInput(format='%Y-%m-%d'),
-            'date_of_abortion': DatePickerInput(format='%Y-%m-%d'),
+
+
+            'dos': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dof': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'dow': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+            'date_of_abortion': forms.TextInput(attrs={'class': 'flatpickr', 'placeholder': 'YYYY-MM-DD'}),
+
             # 'gip': forms.TextInput(attrs={'disabled':True}),
             # 'boar_no':forms.TextInput(attrs={'disabled':True}),
             # 'dos': forms.TextInput(attrs={'disabled':True}),

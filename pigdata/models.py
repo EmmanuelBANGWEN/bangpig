@@ -15,10 +15,17 @@ class general_identification_and_parentage(models.Model):
     colitter_size_of_birth=models.IntegerField(null=True, blank=True)
     color_and_marking=models.TextField(blank=True)
     abnormalities=models.CharField(max_length=3, choices=(('yes','yes'),('no','no')), default='no')
+    
+    class Meta:
+        unique_together = ('user', 'animal_id')  # Empêcher les doublons pour un même utilisateur
+
+
     def __str__(self):
         return f"{self.animal_id} ({self.user.username})"
 
 class health_parameter_vaccination(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
     gip = models.ForeignKey(general_identification_and_parentage, on_delete=models.CASCADE)
     disease=models.CharField(max_length=50, blank=True)
     make=models.CharField(max_length=20, blank=True)

@@ -359,11 +359,11 @@ def create_service(request, animal_id):
 
 @login_required(login_url='loginuser')
 def vaccination(request, animal_id):
-    animal=general_identification_and_parentage.objects.get(animal_id=animal_id)
+    animal=general_identification_and_parentage.objects.get(animal_id=animal_id, user=request.user)
     vaccinations=health_parameter_vaccination.objects.filter(gip=animal)
     form=vaccination_form(initial={'gip':animal})
     if request.method=='POST':    
-        form=vaccination_form(request.POST)
+        form = vaccination_form(request.POST, user=request.user)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user  # Associer l'utilisateur connecté
